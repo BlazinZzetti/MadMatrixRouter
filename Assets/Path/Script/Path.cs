@@ -15,7 +15,7 @@ public class Path : MonoBehaviour
     public Point PointA;
     public Point PointB;
 
-    public int PathLength = 1;
+    public float PathLength = 1f;
 
     public enum PathType
     {
@@ -40,6 +40,12 @@ public class Path : MonoBehaviour
         {
             PathValueText.text = PathLength.ToString();
         }
+#if UNITY_EDITOR
+        if (PathLength != 10)
+        {
+            HighlightedNormalPath.SetActive(false);
+        }
+#endif
     }
 
     void calculatePath()

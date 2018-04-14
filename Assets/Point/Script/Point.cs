@@ -12,7 +12,7 @@ public class Point : MonoBehaviour
     public GameObject HighlightedPathPoint;
     public TextMesh ValueText;
 
-    public int DistanceFromStart = -1;
+    public float DistanceFromStart = -1;
 
     //Used in searching to backtrack.
     public Path shortestPathToThisPoint;

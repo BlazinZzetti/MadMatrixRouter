@@ -38,5 +38,21 @@ public class NetworkCorrectionToolWindow : EditorWindow
                 }
             }
         }
+
+        if (GUILayout.Button("Show Paths Not Proccessed"))
+        {
+            var Paths = GameObject.FindGameObjectsWithTag("Path");
+            foreach (var path in Paths)
+            {
+                var currentPath = path.GetComponent<Path>();
+                if (currentPath != null)
+                {
+                    if (currentPath.PathLength == 10)
+                    {
+                        currentPath.HighlightedNormalPath.SetActive(true);
+                    }
+                }
+            }
+        }
     }
 }
