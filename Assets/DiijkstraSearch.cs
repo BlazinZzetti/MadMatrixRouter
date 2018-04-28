@@ -71,6 +71,32 @@ public class DiijkstraSearch
         unvisitedPoints = new List<Point>();
         visitedPoints = new List<Point>();
         Result = new List<Point>();
+
+        var Paths = GameObject.FindGameObjectsWithTag("Path");
+        foreach (var path in Paths)
+        {
+            var currentPath = path.GetComponent<Path>();
+            if (currentPath != null)
+            {
+                var pointA = currentPath.PointA;
+                if (pointA != null && !pointA.Paths.Contains(currentPath))
+                {
+                    pointA.Paths.Add(currentPath);
+                }
+
+                var pointB = currentPath.PointB;
+                if (pointB != null && !pointB.Paths.Contains(currentPath))
+                {
+                    pointB.Paths.Add(currentPath);
+                }
+            }
+        }
+
+        var Points = GameObject.FindGameObjectsWithTag("Point");
+        foreach (var point in Points)
+        {
+            point.GetComponent<Point>().DistanceFromStart = -1;
+        }
     }
 
     /// <summary>
@@ -234,12 +260,29 @@ public class DiijkstraSearch
                 //to the list of unvisted points which will be used to select the next currentPoint.
                 foreach (var path in currentPoint.Paths)
                 {
-                    var point = path.OtherPoint(currentPoint);
+                    var canProcess = true;
 
-                    //If point has not been added to either list and is not the end Point.
-                    if (!visitedPoints.Contains(point) && !unvisitedPoints.Contains(point) && point != endPoint)
+                    if(path.Type == Path.PathType.OneWay)
                     {
-                        unvisitedPoints.Add(point);
+                        if (path.OneWayDirection == Path.OneWayMode.AToB)
+                        {
+                            canProcess = path.PointA == currentPoint;
+                        }
+                        if (path.OneWayDirection == Path.OneWayMode.BToA)
+                        {
+                            canProcess = path.PointB == currentPoint;
+                        }
+                    }
+
+                    if (canProcess)
+                    {
+                        var point = path.OtherPoint(currentPoint);
+
+                        //If point has not been added to either list and is not the end Point.
+                        if (!visitedPoints.Contains(point) && !unvisitedPoints.Contains(point) && point != endPoint)
+                        {
+                            unvisitedPoints.Add(point);
+                        }
                     }
                 }
 

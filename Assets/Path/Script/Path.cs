@@ -40,12 +40,6 @@ public class Path : MonoBehaviour
         {
             PathValueText.text = PathLength.ToString();
         }
-#if UNITY_EDITOR
-        if (PathLength != 10)
-        {
-            HighlightedNormalPath.SetActive(false);
-        }
-#endif
     }
 
     void calculatePath()
