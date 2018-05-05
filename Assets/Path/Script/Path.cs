@@ -86,7 +86,7 @@ public class Path : MonoBehaviour
         }
         if (HighlightedNormalPath != null)
         {
-            HighlightedNormalPath.transform.localScale = new Vector3(newLocalScale, 1.5f, 1.5f);
+            HighlightedNormalPath.transform.localScale = new Vector3(newLocalScale, 2.5f, 2.5f);
         }
         if (HighlightedOneWayPath != null)
         {

@@ -28,6 +28,8 @@ public class PathFinder : MonoBehaviour
 
     public DiijkstraSearch diijkstraSearch = new DiijkstraSearch();
 
+    public AStarSearch aStarSeach = new AStarSearch();
+
     public void Start()
     {
         StartButton.onClick.RemoveAllListeners();
@@ -40,7 +42,7 @@ public class PathFinder : MonoBehaviour
 
     private void Update()
     {
-        CurrentPhaseText.text = "Current Phase: " + diijkstraSearch.CurrentPhase.ToString();
+        CurrentPhaseText.text = "Current Phase: " + aStarSeach.CurrentPhase.ToString();
         //Check value of dropdown
         switch(UpdateMethodDropdown.value)
         {
@@ -79,13 +81,13 @@ public class PathFinder : MonoBehaviour
 
     private void StartSearch()
     {
-        diijkstraSearch.Setup(StartPoint, EndPoint);
-        diijkstraSearch.Begin();
+        aStarSeach.Setup(StartPoint, EndPoint);
+        aStarSeach.Begin();
     }
 
     private void ResetSearch()
     {
-        diijkstraSearch.CurrentPhase = DiijkstraSearch.SearchPhase.Wait;
+        aStarSeach.CurrentPhase = DiijkstraSearch.SearchPhase.Wait;
         var points = GameObject.FindGameObjectsWithTag("Point");
         var paths = GameObject.FindGameObjectsWithTag("Path");
 
@@ -114,6 +116,6 @@ public class PathFinder : MonoBehaviour
 
     private void Step()
     {
-        diijkstraSearch.Step();        
+        aStarSeach.Step();        
     }
 }

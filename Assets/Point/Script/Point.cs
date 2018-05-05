@@ -19,6 +19,11 @@ public class Point : MonoBehaviour
 
     public List<Path> Paths = new List<Path>();
 
+    public float DistanceFromStartAStar(Point endPoint)
+    {
+        return DistanceFromStart + Vector3.Distance(transform.position, endPoint.transform.position);
+    }
+
     public enum PointType
     {
         PathPoint,
