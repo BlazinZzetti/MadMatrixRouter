@@ -4,33 +4,22 @@ using UnityEngine;
 
 public class AStarSearch : DiijkstraSearch
 {
-    public override void CalculateDistanceFromStart()
+    public override void SortUnvisited()
     {
-        //Initialize variables that will be used to determine the total path distance to currentSearchPoint.
-        //Start with the distance it took to get from currentPoint to currentSearchPoint.
-        var pathDistance = currentPoint.Paths[pathIterator].PathLength;
-
-        //currentPoint will be the first point we travel backwards from.
-        var pointForDistance = currentPoint;
-
-        //Add up all paths up till this point.  Only the start point should not have a reference;
-        while (pointForDistance.shortestPathToThisPoint != null)
+        for (int i = 0; i < unvisitedPoints.Count; i++)
         {
-            pathDistance += pointForDistance.shortestPathToThisPoint.PathLength;
-            pointForDistance = pointForDistance.shortestPathToThisPoint.OtherPoint(pointForDistance);
-        }
+            for (int j = i + 1; j < unvisitedPoints.Count; j++)
+            {
+                var trueDistanceI = unvisitedPoints[i].DistanceFromStart + Vector3.Distance(unvisitedPoints[i].transform.position, endPoint.transform.position);
+                var trueDistancej = unvisitedPoints[j].DistanceFromStart + Vector3.Distance(unvisitedPoints[j].transform.position, endPoint.transform.position);
 
-        //A* override
-        //Add the real world distance away from the end point to the pathDistace.
-        pathDistance += Vector3.Distance(currentSearchPoint.transform.position, endPoint.transform.position);
-
-        //If the point has not been assigned a value yet or if the point's current value is more than the current distance traveled.
-        //Then: Assign the current distance traveled to DistanceFromStart.  Keep track of the path used to get to this point the fastest
-        //so it can be used to backtrack and determine the Result List.
-        if (currentSearchPoint.DistanceFromStart > pathDistance || currentSearchPoint.DistanceFromStart == -1)
-        {
-            currentSearchPoint.DistanceFromStart = pathDistance;
-            currentSearchPoint.shortestPathToThisPoint = currentPoint.Paths[pathIterator];
+                if (trueDistanceI > trueDistancej || unvisitedPoints[i].DistanceFromStart == -1 && unvisitedPoints[j].DistanceFromStart != -1)
+                {
+                    var tempPoint = unvisitedPoints[i];
+                    unvisitedPoints[i] = unvisitedPoints[j];
+                    unvisitedPoints[j] = tempPoint;
+                }
+            }
         }
     }
 }

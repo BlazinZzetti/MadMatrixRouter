@@ -12,7 +12,9 @@ public class PathFinder : MonoBehaviour
     public Button ResetButton;
     public Button StepButton;
     public Text CurrentPhaseText;
+    public Dropdown SearchTypeDropdown;
     public Dropdown UpdateMethodDropdown;
+    public Text CurrentDistanceToStartValueText;
 
     public float TimeToDelayInSeconds = 1.0f;
     private bool WaitingForDelayUpdateToFinish = false;   
@@ -42,9 +44,21 @@ public class PathFinder : MonoBehaviour
 
     private void Update()
     {
-        CurrentPhaseText.text = "Current Phase: " + aStarSeach.CurrentPhase.ToString();
+        var searchType = SearchTypeDropdown.value;
+        switch (searchType)
+        {
+            case 0:
+                CurrentPhaseText.text = "Current Phase: " + diijkstraSearch.CurrentPhase.ToString();
+                CurrentDistanceToStartValueText.text = diijkstraSearch.CurrentBestDistanceToStart.ToString();
+                break;
+            case 1:
+                CurrentPhaseText.text = "Current Phase: " + aStarSeach.CurrentPhase.ToString();
+                CurrentDistanceToStartValueText.text = aStarSeach.CurrentBestDistanceToStart.ToString();
+                break;
+        }        
+
         //Check value of dropdown
-        switch(UpdateMethodDropdown.value)
+        switch (UpdateMethodDropdown.value)
         {
             case 0:
                 HowToUpdate = UpdateMethod.Manual;
@@ -81,13 +95,26 @@ public class PathFinder : MonoBehaviour
 
     private void StartSearch()
     {
-        aStarSeach.Setup(StartPoint, EndPoint);
-        aStarSeach.Begin();
+        SearchTypeDropdown.interactable = false;
+        var searchType = SearchTypeDropdown.value;
+        switch (searchType)
+        {
+            case 0:
+                diijkstraSearch.Setup(StartPoint, EndPoint);
+                diijkstraSearch.Begin();
+                break;
+            case 1:
+                aStarSeach.Setup(StartPoint, EndPoint);
+                aStarSeach.Begin();
+                break;
+        }
     }
 
     private void ResetSearch()
     {
+        diijkstraSearch.CurrentPhase = DiijkstraSearch.SearchPhase.Wait;
         aStarSeach.CurrentPhase = DiijkstraSearch.SearchPhase.Wait;
+
         var points = GameObject.FindGameObjectsWithTag("Point");
         var paths = GameObject.FindGameObjectsWithTag("Path");
 
@@ -101,6 +128,8 @@ public class PathFinder : MonoBehaviour
         {
             path.GetComponent<Path>().HighlightedNormalPath.SetActive(false);
         }
+
+        SearchTypeDropdown.interactable = true;
     }
 
     private IEnumerator DelayedStep()
@@ -116,6 +145,15 @@ public class PathFinder : MonoBehaviour
 
     private void Step()
     {
-        aStarSeach.Step();        
+        var searchType = SearchTypeDropdown.value;
+        switch (searchType)
+        {
+            case 0:
+                diijkstraSearch.Step();
+                break;
+            case 1:
+                aStarSeach.Step();
+                break;
+        }
     }
 }

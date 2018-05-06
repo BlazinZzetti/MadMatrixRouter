@@ -48,6 +48,19 @@ public class DiijkstraSearch
 
     public SearchPhase CurrentPhase = SearchPhase.Wait;
 
+    public float CurrentBestDistanceToStart
+    {
+        get
+        {
+            if (unvisitedPoints.Count > 1)
+            {
+                return unvisitedPoints[0].DistanceFromStart;
+            }
+
+            return -1;
+        }
+    }
+
     /// <summary>
     /// Setup the start point the end point to be used for the search.
     /// </summary>
