@@ -17,7 +17,9 @@ public class PathFinder : MonoBehaviour
     public Text CurrentDistanceToStartValueText;
 
     public float TimeToDelayInSeconds = 1.0f;
-    private bool WaitingForDelayUpdateToFinish = false;   
+    private bool WaitingForDelayUpdateToFinish = false;
+
+    private List<Path> paths = new List<Path>();
 
     public enum UpdateMethod
     {
@@ -40,6 +42,8 @@ public class PathFinder : MonoBehaviour
         StartButton.onClick.AddListener(StartSearch);
         ResetButton.onClick.AddListener(ResetSearch);
         StepButton.onClick.AddListener(Step);
+
+        paths = new List<Path>(GameObject.FindObjectsOfType<Path>());
     }
 
     private void Update()
@@ -96,6 +100,29 @@ public class PathFinder : MonoBehaviour
     private void StartSearch()
     {
         SearchTypeDropdown.interactable = false;
+
+        //Set the default settings to start
+        foreach (var path in paths)
+        {
+            path.ResetToDefault();
+        }
+
+        foreach (var path in EndPoint.Paths)
+        {
+            if (path.Type != Path.PathType.OneWay)
+            {
+                path.Type = Path.PathType.OneWay;
+                if (EndPoint == path.PointA)
+                {
+                    path.OneWayDirection = Path.OneWayMode.BToA;
+                }
+                else
+                {
+                    path.OneWayDirection = Path.OneWayMode.AToB;
+                }
+            }
+        }
+
         var searchType = SearchTypeDropdown.value;
         switch (searchType)
         {

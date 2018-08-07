@@ -1,19 +1,21 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Path : MonoBehaviour
+public class Path2 : MonoBehaviour
 {
     public GameObject NormalPath;
-    public GameObject OneWayPath;
-    public GameObject HighlightedNormalPath;
-    public GameObject HighlightedOneWayPath;
-    public TextMesh PathValueText;
+    public GameObject HighlightedPath;
+
+    public Material normalPathColor;
+    public Material OneWayPathColor;
 
     public Point PointA;
     public Point PointB;
+
+    List<Point> TurnPoints = new List<Point>();
 
     public float PathLength = 1f;
 
@@ -29,51 +31,39 @@ public class Path : MonoBehaviour
         BToA
     }
 
-    private PathType defaultPathType = PathType.Normal;
     public PathType Type = PathType.Normal;
 
-    private OneWayMode defaultOneWayDirection = OneWayMode.AToB;
     public OneWayMode OneWayDirection = OneWayMode.AToB;
-
-    private void Start()
-    {
-        defaultPathType = Type;
-        defaultOneWayDirection = OneWayDirection;
-    }
 
     private void Update()
     {
-        calculatePath();
-        if(PathValueText != null)
-        {
-            PathValueText.text = PathLength.ToString();
+		if(Type == PathType.OneWay && OneWayDirection == OneWayMode.BToA)
+		{
+			CalculatePath(NormalPath.transform, HighlightedPath.transform, PointB.transform, PointA.transform);
+		}
+		else
+		{
+			CalculatePath(NormalPath.transform, HighlightedPath.transform, PointA.transform, PointB.transform);
         }
     }
 
-    public void ResetToDefault()
+    void CalculatePath(Transform path, Transform highlightedPath, Transform startPoint, Transform endPoint)
     {
-        Type = defaultPathType;
-        OneWayDirection = defaultOneWayDirection;
-    }
-
-    void calculatePath()
-    {
-        if (PointA != null && PointB != null)
+        if (startPoint != null && endPoint != null)
         {
-            var startPoint = PointA.transform;
-            var endPoint = PointB.transform;
-
             var midPoint = new Vector3(
                 (startPoint.position.x + endPoint.position.x) / 2,
                 (startPoint.position.y + endPoint.position.y) / 2, 
                 (startPoint.position.z + endPoint.position.z) / 2);
 
             transform.position = midPoint;
+            path.position = midPoint;
+            highlightedPath.position = midPoint;
             var distance = Vector3.Distance(startPoint.position, endPoint.position);
 
             SetLocalScaleForPaths(distance);
 
-            Vector3 rotation = endPoint.position - transform.position;
+            Vector3 rotation = endPoint.position - startPoint.position;
 
             float angleY = Mathf.Atan2(rotation.z, rotation.x) * (180f / Mathf.PI);
             float angleZ = Mathf.Atan2(rotation.y, rotation.x) * (180f / Mathf.PI);
@@ -84,7 +74,8 @@ public class Path : MonoBehaviour
             if (angleZ < 0)
                 angleZ += 360;
 
-            transform.rotation = Quaternion.Euler(new Vector3(0, -angleY, angleZ));
+            path.rotation = Quaternion.Euler(new Vector3(0, -angleY, angleZ));
+            highlightedPath.rotation = Quaternion.Euler(new Vector3(0, -angleY, angleZ));
         }
     }
 
@@ -92,19 +83,11 @@ public class Path : MonoBehaviour
     {
         if (NormalPath != null)
         {
-            NormalPath.transform.localScale = new Vector3(newLocalScale, 1, 1);
+            NormalPath.transform.localScale = new Vector3(newLocalScale, 100, 100);
         }
-        if (OneWayPath != null)
+        if (HighlightedPath != null)
         {
-            OneWayPath.transform.localScale = new Vector3(newLocalScale, 1, 1);
-        }
-        if (HighlightedNormalPath != null)
-        {
-            HighlightedNormalPath.transform.localScale = new Vector3(newLocalScale, 2.5f, 2.5f);
-        }
-        if (HighlightedOneWayPath != null)
-        {
-            HighlightedOneWayPath.transform.localScale = new Vector3(newLocalScale, 1.5f, 1.5f); ;
+            HighlightedPath.transform.localScale = new Vector3(newLocalScale, 250f, 250f);
         }
     }
 
