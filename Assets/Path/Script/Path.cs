@@ -6,6 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Path : MonoBehaviour
 {
+    public int PathID;
     public GameObject NormalPath;
     public GameObject OneWayPath;
     public GameObject HighlightedNormalPath;
