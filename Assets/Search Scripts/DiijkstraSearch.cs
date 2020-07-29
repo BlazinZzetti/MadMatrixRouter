@@ -88,7 +88,7 @@ public class DiijkstraSearch
         var Paths = GameObject.FindGameObjectsWithTag("Path");
         foreach (var path in Paths)
         {
-            var currentPath = path.GetComponent<Path>();
+            var currentPath = path.GetComponent<MMPath>();
             if (currentPath != null)
             {
                 var pointA = currentPath.PointA;
@@ -162,7 +162,7 @@ public class DiijkstraSearch
         //currentPoint.Paths.Sort(p => p.DistanceFromStart);
 
         //Find better way to sort in accending order.
-        var pathsToSort = new List<Path>(currentPoint.Paths);
+        var pathsToSort = new List<MMPath>(currentPoint.Paths);
 
         for (int i = 0; i < pathsToSort.Count; i++)
         {
@@ -178,7 +178,7 @@ public class DiijkstraSearch
         }
 
         //Reassign currentPoint's paths with the ordered list version.
-        currentPoint.Paths = new List<Path>(pathsToSort);
+        currentPoint.Paths = new List<MMPath>(pathsToSort);
 
         //Reset pathInterator to start at first path in .Paths
         pathIterator = 0;
@@ -193,9 +193,9 @@ public class DiijkstraSearch
 
         //If the path we are checking is a one way path, we need to make sure 
         //we are traveling across it in the direction it allows.
-        if (pathToCheck.Type == Path.PathType.OneWay)
+        if (pathToCheck.Type == MMPath.PathType.OneWay)
         {
-            if (pathToCheck.OneWayDirection == Path.OneWayMode.AToB)
+            if (pathToCheck.OneWayDirection == MMPath.OneWayMode.AToB)
             {
                 if (pathToCheck.PointA == currentPoint)
                 {
@@ -209,7 +209,7 @@ public class DiijkstraSearch
                     CurrentPhase = SearchPhase.SwitchPathsOrPoint;
                 }
             }
-            if (pathToCheck.OneWayDirection == Path.OneWayMode.BToA)
+            if (pathToCheck.OneWayDirection == MMPath.OneWayMode.BToA)
             {
                 if (pathToCheck.PointB == currentPoint)
                 {
@@ -283,13 +283,13 @@ public class DiijkstraSearch
             {
                 var canProcess = true;
 
-                if (path.Type == Path.PathType.OneWay)
+                if (path.Type == MMPath.PathType.OneWay)
                 {
-                    if (path.OneWayDirection == Path.OneWayMode.AToB)
+                    if (path.OneWayDirection == MMPath.OneWayMode.AToB)
                     {
                         canProcess = path.PointA == currentPoint;
                     }
-                    if (path.OneWayDirection == Path.OneWayMode.BToA)
+                    if (path.OneWayDirection == MMPath.OneWayMode.BToA)
                     {
                         canProcess = path.PointB == currentPoint;
                     }

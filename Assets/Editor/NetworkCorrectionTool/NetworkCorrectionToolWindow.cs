@@ -21,7 +21,7 @@ public class NetworkCorrectionToolWindow : EditorWindow
             var Paths = GameObject.FindGameObjectsWithTag("Path");
             foreach (var path in Paths)
             {
-                var currentPath = path.GetComponent<Path>();
+                var currentPath = path.GetComponent<MMPath>();
                 if (currentPath != null)
                 {
                     var pointA = currentPath.PointA;
@@ -44,7 +44,7 @@ public class NetworkCorrectionToolWindow : EditorWindow
             var Paths = GameObject.FindGameObjectsWithTag("Path");
             foreach (var path in Paths)
             {
-                var currentPath = path.GetComponent<Path>();
+                var currentPath = path.GetComponent<MMPath>();
                 if (currentPath != null)
                 {
                     if (currentPath.PathLength == 10)

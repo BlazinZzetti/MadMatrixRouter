@@ -55,7 +55,7 @@ public class PointEditor : Editor
             var newPointObject = PrefabUtility.InstantiatePrefab(Resources.Load("Point")) as GameObject;
             var newPathObject = PrefabUtility.InstantiatePrefab(Resources.Load("Path")) as GameObject;
 
-            var newPath = newPathObject.GetComponent<Path>();
+            var newPath = newPathObject.GetComponent<MMPath>();
             var newPoint = newPointObject.GetComponent<Point>();
             newPath.PointA = point;
             newPath.PointB = newPoint;
@@ -78,7 +78,7 @@ public class PointEditor : Editor
 
             var newPathObject = PrefabUtility.InstantiatePrefab(Resources.Load("Path")) as GameObject;
 
-            var newPath = newPathObject.GetComponent<Path>();
+            var newPath = newPathObject.GetComponent<MMPath>();
 
             newPath.PointA = pointA;
             newPath.PointB = pointB;

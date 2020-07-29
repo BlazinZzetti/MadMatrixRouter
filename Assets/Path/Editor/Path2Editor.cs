@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Path2))]
+[CustomEditor(typeof(MMPath2))]
 public class Path2Editor : Editor
 {
-    private Path2 path;
+    private MMPath2 path;
 
     public override void OnInspectorGUI()
     {
@@ -15,7 +15,7 @@ public class Path2Editor : Editor
         {
             //What type am I?
             //Use material for that type.
-            if (path.Type == Path2.PathType.Normal)
+            if (path.Type == MMPath2.PathType.Normal)
             {
                 path.NormalPath.GetComponent<MeshRenderer>().material = path.normalPathColor;
             }
@@ -26,7 +26,7 @@ public class Path2Editor : Editor
         }
         else
         {
-            path = target as Path2;
+            path = target as MMPath2;
         }
 
     }

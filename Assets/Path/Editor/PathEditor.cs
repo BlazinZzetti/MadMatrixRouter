@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Path))]
+[CustomEditor(typeof(MMPath))]
 public class PathEditor : Editor
 {
-    private Path path;
+    private MMPath path;
 
     public override void OnInspectorGUI()
     {
@@ -27,7 +27,7 @@ public class PathEditor : Editor
 
             //What type am I?
             //Switch Object to that type.
-            if (path.Type == Path.PathType.Normal)
+            if (path.Type == MMPath.PathType.Normal)
             {
                 path.NormalPath.SetActive(true);
                 path.OneWayPath.SetActive(false);
@@ -40,7 +40,7 @@ public class PathEditor : Editor
         }
         else
         {
-            path = target as Path;
+            path = target as MMPath;
         }
 
     }

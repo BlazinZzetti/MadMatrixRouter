@@ -46,7 +46,7 @@ public class MapExportTool : EditorWindow
         var Paths = GameObject.FindGameObjectsWithTag("Path");
         for (int i = 0; i < Paths.Length; i++)
         {
-            Paths[i].GetComponent<Path>().PathID = i;
+            Paths[i].GetComponent<MMPath>().PathID = i;
         }
     }
 
@@ -56,7 +56,7 @@ public class MapExportTool : EditorWindow
         var Paths = GameObject.FindGameObjectsWithTag("Path");
         foreach (var path in Paths)
         {
-            var currentPath = path.GetComponent<Path>();
+            var currentPath = path.GetComponent<MMPath>();
             if (currentPath != null)
             {
                 var pointA = currentPath.PointA;
@@ -107,7 +107,7 @@ public class MapExportTool : EditorWindow
 
         foreach (var path in Paths)
         {
-            var pathData = path.GetComponent<Path>();
+            var pathData = path.GetComponent<MMPath>();
 
             var xmlElementPath = commandsXml.CreateElement("Path");
             xmlElementPath.SetAttribute("ID", pathData.PathID.ToString());
@@ -172,13 +172,13 @@ public class MapExportTool : EditorWindow
                 foreach (XmlNode pathNode in node.ChildNodes)
                 {
                     var newPathObject = PrefabUtility.InstantiatePrefab(Resources.Load("Path")) as GameObject;
-                    var newPath = newPathObject.GetComponent<Path>();
+                    var newPath = newPathObject.GetComponent<MMPath>();
 
                     newPath.PointA = pointsList.First(p => p.name == pathNode.ChildNodes[0].InnerText).GetComponent<Point>();
                     newPath.PointB = pointsList.First(p => p.name == pathNode.ChildNodes[1].InnerText).GetComponent<Point>();
                     newPath.PathLength = float.Parse(pathNode.ChildNodes[2].InnerText);
-                    newPath.Type = (Path.PathType)Enum.Parse(typeof(Path.PathType), pathNode.ChildNodes[3].InnerText);
-                    newPath.OneWayDirection = (Path.OneWayMode)Enum.Parse(typeof(Path.OneWayMode), pathNode.ChildNodes[4].InnerText);
+                    newPath.Type = (MMPath.PathType)Enum.Parse(typeof(MMPath.PathType), pathNode.ChildNodes[3].InnerText);
+                    newPath.OneWayDirection = (MMPath.OneWayMode)Enum.Parse(typeof(MMPath.OneWayMode), pathNode.ChildNodes[4].InnerText);
                 }
             }
         }

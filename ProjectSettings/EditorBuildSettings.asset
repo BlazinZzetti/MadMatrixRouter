@@ -4,4 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/MadMatrix.unity
+    guid: a02d80d1e8bd84a44b545ff0f795e4be
+  m_configObjects: {}

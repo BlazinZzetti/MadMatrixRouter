@@ -15,9 +15,9 @@ public class Point : MonoBehaviour
     public float DistanceFromStart = -1;
 
     //Used in searching to backtrack.
-    public Path shortestPathToThisPoint;
+    public MMPath shortestPathToThisPoint;
 
-    public List<Path> Paths = new List<Path>();
+    public List<MMPath> Paths = new List<MMPath>();
 
     public float DistanceFromStartAStar(Point endPoint)
     {
