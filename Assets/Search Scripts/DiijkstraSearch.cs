@@ -110,6 +110,54 @@ public class DiijkstraSearch
         {
             point.GetComponent<Point>().DistanceFromStart = -1;
         }
+        
+        while (CurrentPhase != SearchPhase.Finish)
+        {
+            Step();
+        }
+
+        //need to do final step stil?
+        Step();
+    }
+
+    /// <summary>
+    /// Reset the search variable for the next search.
+    /// </summary>
+    public virtual void BeginAsync()
+    {
+        currentPoint = startPoint;
+        currentSearchPoint = null;
+        pathIterator = 0;
+        CurrentPhase = SearchPhase.HighlightPoint;
+        unvisitedPoints = new List<Point>();
+        visitedPoints = new List<Point>();
+        Result = new List<Point>();
+
+        var Paths = GameObject.FindGameObjectsWithTag("Path");
+        foreach (var path in Paths)
+        {
+            var currentPath = path.GetComponent<MMPath>();
+            if (currentPath != null)
+            {
+                var pointA = currentPath.PointA;
+                if (pointA != null && !pointA.Paths.Contains(currentPath))
+                {
+                    pointA.Paths.Add(currentPath);
+                }
+
+                var pointB = currentPath.PointB;
+                if (pointB != null && !pointB.Paths.Contains(currentPath))
+                {
+                    pointB.Paths.Add(currentPath);
+                }
+            }
+        }
+
+        var Points = GameObject.FindGameObjectsWithTag("Point");
+        foreach (var point in Points)
+        {
+            point.GetComponent<Point>().DistanceFromStart = -1;
+        }
     }
 
     /// <summary>

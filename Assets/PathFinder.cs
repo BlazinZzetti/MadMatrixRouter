@@ -40,6 +40,14 @@ public class PathFinder : MonoBehaviour
 
     public AStarSearch aStarSeach = new AStarSearch();
 
+    private struct PathSettings
+    {
+        public MMPath.PathType pathType;
+        public MMPath.OneWayMode oneWayMode;
+    }
+
+    private List<PathSettings> defaultPathSettings;
+
     public void Start()
     {
         StartButton.onClick.RemoveAllListeners();
@@ -52,6 +60,12 @@ public class PathFinder : MonoBehaviour
         StepButton.onClick.AddListener(Step);
 
         paths = new List<MMPath>(GameObject.FindObjectsOfType<MMPath>());
+        defaultPathSettings = new List<PathSettings>();
+
+        foreach (var pathData in paths)
+        {
+            defaultPathSettings.Add(new PathSettings { pathType = pathData.Type, oneWayMode = pathData.OneWayDirection }); 
+        }
     }
 
     private void Update()
@@ -92,25 +106,62 @@ public class PathFinder : MonoBehaviour
                 break;
         }
 
-        if (HowToUpdate != UpdateMethod.Manual && !WaitingForDelayUpdateToFinish)
-        {
-            if(HowToUpdate == UpdateMethod.Immeadiate)
-            {
-                Step();
-            }
-            else if(HowToUpdate == UpdateMethod.Delay)
-            {
-                StartCoroutine(DelayedStep());
-            }
-        }
+        //if (HowToUpdate != UpdateMethod.Manual && !WaitingForDelayUpdateToFinish)
+        //{
+        //    if(HowToUpdate == UpdateMethod.Immeadiate)
+        //    {
+        //        Step();
+        //    }
+        //    else if(HowToUpdate == UpdateMethod.Delay)
+        //    {
+        //        StartCoroutine(DelayedStep());
+        //    }
+        //}
     }
 
     private void StartSearch()
     {
-        StartSearch(Point1InputField.text, Point2InputField.text);
+        StartSearchAsync(Point1InputField.text, Point2InputField.text);
     }
 
     private string StartSearch(string point1, string point2)
+    {
+        SearchTypeDropdown.interactable = false;
+        Point1InputField.interactable = false;
+        Point2InputField.interactable = false;
+
+        StartPoint = GameObject.Find(point1).GetComponent<Point>();
+        EndPoint = GameObject.Find(point2).GetComponent<Point>();
+
+        //Set the default settings to start
+        foreach (var path in paths)
+        {
+            path.ResetToDefault();
+        }
+
+        foreach (var path in EndPoint.Paths)
+        {
+            if (path.Type != MMPath.PathType.OneWay)
+            {
+                path.Type = MMPath.PathType.OneWay;
+                if (EndPoint == path.PointA)
+                {
+                    path.OneWayDirection = MMPath.OneWayMode.BToA;
+                }
+                else
+                {
+                    path.OneWayDirection = MMPath.OneWayMode.AToB;
+                }
+            }
+        }
+
+        diijkstraSearch.Setup(StartPoint, EndPoint);
+        diijkstraSearch.Begin();
+
+        return diijkstraSearch.CurrentBestDistanceToStart.ToString();
+    }
+
+    private string StartSearchAsync(string point1, string point2)
     {
         SearchTypeDropdown.interactable = false;
         Point1InputField.interactable = false;
@@ -146,11 +197,11 @@ public class PathFinder : MonoBehaviour
         {
             case 0:
                 diijkstraSearch.Setup(StartPoint, EndPoint);
-                diijkstraSearch.Begin();
+                diijkstraSearch.BeginAsync();
                 break;
             case 1:
                 aStarSeach.Setup(StartPoint, EndPoint);
-                aStarSeach.Begin();
+                aStarSeach.BeginAsync();
                 break;
         }
 
@@ -261,6 +312,12 @@ public class PathFinder : MonoBehaviour
         var pointB1 = currentSearch[1].StartPointB.ToString();
 
         //Reset to default paths
+        ResetSearch();
+        for (int i = 0; i< paths.Count; i++)
+        {
+            paths[i].Type = defaultPathSettings[i].pathType;
+            paths[i].OneWayDirection = defaultPathSettings[i].oneWayMode;
+        }
 
         //Need to make adjustments to the map so that the only way to hit pointB, if on a path, is to go from 1 start point to the next.
         if (currentSearch[1].StartPointB != 0)
