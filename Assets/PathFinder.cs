@@ -260,19 +260,20 @@ public class PathFinder : MonoBehaviour
     private void BombSearch()
     {
         var report = "";
-        for (int i = 0; i < 30; i++)
+        //for (int i = 0; i < 30; i++)
         {
-            for (int j = 0; j < 30; j++)
+            //for (int j = 0; j < 30; j++)
             {
+                int i = 1; int j = 0;
                 //While adding a check here for if we have done an i vs j comparision would make sense, 
                 //we need to wait to filter that out later as one way paths may make going from i to j different than j to i.
                 if (i != j) 
                 {
                     var currentSearch = bombData.RetriveBombObjects(i, j);
 
-                    if (currentSearch[0].StartPointB != 0)
+                    if (currentSearch[0].StartPointB == 0)
                     {
-                        if (currentSearch[1].StartPointB != 0 || currentSearch[1].isOneWay)
+                        if (currentSearch[1].StartPointB == 0 || currentSearch[1].isOneWay)
                         {
                             report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
                         }
@@ -284,7 +285,7 @@ public class PathFinder : MonoBehaviour
                     }
                     else
                     {
-                        if (currentSearch[1].StartPointB != 0 || currentSearch[1].isOneWay)
+                        if (currentSearch[1].StartPointB == 0 || currentSearch[1].isOneWay)
                         {
                             report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 1, 0) + Environment.NewLine;
@@ -367,7 +368,9 @@ public class PathFinder : MonoBehaviour
     private string test(string searchStartPoint, Point startPoint, Point endPoint)
     {
         //First force all normal paths to one way to point B1.
-        foreach (var path in endPoint.Paths)
+        var pathsWithEndpoint = paths.FindAll(p => p.PointA == endPoint || p.PointB == endPoint);
+
+        foreach (var path in pathsWithEndpoint)
         {
             if (path.Type != MMPath.PathType.OneWay)
             {
@@ -388,7 +391,9 @@ public class PathFinder : MonoBehaviour
 
         //Next force all normal paths away from B0
         //While searching make sure the path from B1 goes to B0.
-        foreach (var path in startPoint.Paths)
+        var pathsWithStartPoint = paths.FindAll(p => p.PointA == startPoint || p.PointB == startPoint);
+
+        foreach (var path in pathsWithStartPoint)
         {
             if (path.OtherPoint(startPoint) == endPoint)
             {
