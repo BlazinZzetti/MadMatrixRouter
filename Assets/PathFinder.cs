@@ -106,17 +106,17 @@ public class PathFinder : MonoBehaviour
                 break;
         }
 
-        //if (HowToUpdate != UpdateMethod.Manual && !WaitingForDelayUpdateToFinish)
-        //{
-        //    if(HowToUpdate == UpdateMethod.Immeadiate)
-        //    {
-        //        Step();
-        //    }
-        //    else if(HowToUpdate == UpdateMethod.Delay)
-        //    {
-        //        StartCoroutine(DelayedStep());
-        //    }
-        //}
+        if (HowToUpdate != UpdateMethod.Manual && !WaitingForDelayUpdateToFinish)
+        {
+            if (HowToUpdate == UpdateMethod.Immeadiate)
+            {
+                Step();
+            }
+            else if (HowToUpdate == UpdateMethod.Delay)
+            {
+                StartCoroutine(DelayedStep());
+            }
+        }
     }
 
     private void StartSearch()
@@ -132,12 +132,6 @@ public class PathFinder : MonoBehaviour
 
         StartPoint = GameObject.Find(point1).GetComponent<Point>();
         EndPoint = GameObject.Find(point2).GetComponent<Point>();
-
-        //Set the default settings to start
-        foreach (var path in paths)
-        {
-            path.ResetToDefault();
-        }
 
         foreach (var path in EndPoint.Paths)
         {
@@ -220,6 +214,7 @@ public class PathFinder : MonoBehaviour
         {
             point.GetComponent<Point>().DistanceFromStart = -1;
             point.GetComponent<Point>().HighlightedPathPoint.SetActive(false);
+            point.GetComponent<Point>().shortestPathToThisPoint = null;
         }
 
         foreach (var path in paths)
@@ -259,12 +254,12 @@ public class PathFinder : MonoBehaviour
 
     private void BombSearch()
     {
-        var report = "";
-        //for (int i = 0; i < 30; i++)
+        HowToUpdate = UpdateMethod.Manual;
+        for (int i = 0; i < 30; i++)
         {
-            //for (int j = 0; j < 30; j++)
+            for (int j = 0; j < 30; j++)
             {
-                int i = 1; int j = 0;
+                //int i = 1; int j = 0;
                 //While adding a check here for if we have done an i vs j comparision would make sense, 
                 //we need to wait to filter that out later as one way paths may make going from i to j different than j to i.
                 if (i != j) 
@@ -275,34 +270,38 @@ public class PathFinder : MonoBehaviour
                     {
                         if (currentSearch[1].StartPointB == 0 || currentSearch[1].isOneWay)
                         {
-                            report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
+                            Debug.Log(CompleteBombSearch(currentSearch, 0, 0));
                         }
                         else
                         {
+                            var report = "";
                             report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 0, 1) + Environment.NewLine;
+                            Debug.Log(report);
                         }
                     }
                     else
                     {
                         if (currentSearch[1].StartPointB == 0 || currentSearch[1].isOneWay)
                         {
+                            var report = "";
                             report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 1, 0) + Environment.NewLine;
+                            Debug.Log(report);
                         }
                         else
                         {
+                            var report = "";
                             report += CompleteBombSearch(currentSearch, 0, 0) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 0, 1) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 1, 0) + Environment.NewLine;
                             report += CompleteBombSearch(currentSearch, 1, 1) + Environment.NewLine;
+                            Debug.Log(report);
                         }
                     }
                 }
             }
         }
-
-        Debug.Log(report);
     }
 
     private string CompleteBombSearch(BombData.BombObject[] currentSearch, int v1, int v2)
@@ -380,11 +379,11 @@ public class PathFinder : MonoBehaviour
                 path.Type = MMPath.PathType.OneWay;
                 if (isOtherPointA)
                 {
-                    path.OneWayDirection = MMPath.OneWayMode.BToA;
+                    path.OneWayDirection = MMPath.OneWayMode.AToB;
                 }
                 else
                 {
-                    path.OneWayDirection = MMPath.OneWayMode.AToB;
+                    path.OneWayDirection = MMPath.OneWayMode.BToA;
                 }
             }
         }
@@ -403,13 +402,13 @@ public class PathFinder : MonoBehaviour
                     //Need to make sure that we both dont modify the path, and make sure we can legally move.
                     if (isB0_PA)
                     {
-                        if (path.OneWayDirection != MMPath.OneWayMode.BToA)
+                        if (path.OneWayDirection != MMPath.OneWayMode.AToB)
                         {
                             //bad
                             return "Bad search";
                         }
                     }
-                    else if (path.OneWayDirection != MMPath.OneWayMode.AToB)
+                    else if (path.OneWayDirection != MMPath.OneWayMode.BToA)
                     {
                         //bad
                         return "Bad search";
@@ -421,11 +420,11 @@ public class PathFinder : MonoBehaviour
 
                     if (isB0_PA)
                     {
-                        path.OneWayDirection = MMPath.OneWayMode.BToA;
+                        path.OneWayDirection = MMPath.OneWayMode.AToB;
                     }
                     else
                     {
-                        path.OneWayDirection = MMPath.OneWayMode.AToB;
+                        path.OneWayDirection = MMPath.OneWayMode.BToA;
                     }
                 }
             }
