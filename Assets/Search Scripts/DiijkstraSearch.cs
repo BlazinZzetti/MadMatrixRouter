@@ -52,6 +52,10 @@ public class DiijkstraSearch
     {
         get
         {
+            if (endPoint != null && endPoint.DistanceFromStart != -1)
+            {
+                return endPoint.DistanceFromStart;
+            }
             if (unvisitedPoints.Count > 1)
             {
                 return unvisitedPoints[0].DistanceFromStart;
