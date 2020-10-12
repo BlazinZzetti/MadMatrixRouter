@@ -75,6 +75,7 @@ public class MMPath : MonoBehaviour
             SetLocalScaleForPaths(distance);
 
             Vector3 rotation = endPoint.position - transform.position;
+            //Vector3 rotation = transform.position - endPoint.position;
 
             float angleY = Mathf.Atan2(rotation.z, rotation.x) * (180f / Mathf.PI);
             float angleZ = Mathf.Atan2(rotation.y, rotation.x) * (180f / Mathf.PI);
