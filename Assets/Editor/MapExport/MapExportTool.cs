@@ -231,33 +231,33 @@ public class MapExportTool : EditorWindow
     //    commands = new Dictionary<string, string>(newCommands);
     //}
 
-    void onLoadFileLocationButtonPressed()
-    {
-        System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+    //void onLoadFileLocationButtonPressed()
+    //{
+    //    System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
 
-        var result = ofd.ShowDialog();
+    //    var result = ofd.ShowDialog();
 
-        if (result == System.Windows.Forms.DialogResult.OK && File.Exists(ofd.FileName))
-        {
-            // Open the file to read from.
-            using (StreamReader sr = File.OpenText(ofd.FileName))
-            {
-                string s = "";
-                for (int i = 0; i < 116; i++)
-                {                    
-                    if ((s = sr.ReadLine()) != null)
-                    {
-                        var splitS = s.Split(new char[] { '_' });
-                        CreatePoint(int.Parse(splitS[0]), int.Parse(splitS[1]), int.Parse(splitS[2]));
-                        if (int.Parse(splitS[1]) != 0)
-                        {
-                            CreatePoint(int.Parse(splitS[0]) + 116, -int.Parse(splitS[1]), int.Parse(splitS[2]));
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //    if (result == System.Windows.Forms.DialogResult.OK && File.Exists(ofd.FileName))
+    //    {
+    //        // Open the file to read from.
+    //        using (StreamReader sr = File.OpenText(ofd.FileName))
+    //        {
+    //            string s = "";
+    //            for (int i = 0; i < 116; i++)
+    //            {                    
+    //                if ((s = sr.ReadLine()) != null)
+    //                {
+    //                    var splitS = s.Split(new char[] { '_' });
+    //                    CreatePoint(int.Parse(splitS[0]), int.Parse(splitS[1]), int.Parse(splitS[2]));
+    //                    if (int.Parse(splitS[1]) != 0)
+    //                    {
+    //                        CreatePoint(int.Parse(splitS[0]) + 116, -int.Parse(splitS[1]), int.Parse(splitS[2]));
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     public void CreatePoint(int id, int xPos, int zPos)
     {
